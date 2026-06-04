@@ -1,5 +1,10 @@
+import logging
+from typing import Literal
+
 from .pyserial_client import SerialClient
 from . import commands
+
+logger = logging.getLogger(__name__)
 
 
 class Wheel:
@@ -17,11 +22,15 @@ class Wheel:
             port, baudrate=baudrate, timeout=timeout, line_ending=line_ending
         )
 
-    def goto_pos(self, pos: int):
-        assert self.MIN_POS <= pos <= self.MAX_POS
+    def goto_pos(self, pos: Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]):
+        assert self.MIN_POS <= pos <= self.MAX_POS, (
+            f"Invalid position {pos} for wheel with min {self.MIN_POS} and max {self.MAX_POS}"
+        )
+        logger.info(f"Filter wheel going to position {pos}")
         self._serial.write_command(commands.build_command(commands.POS, params=[pos]))
 
     def get_pos(self):
+        logger.info("Retrieving filter wheel position")
         return int(
             self._serial.query_command(
                 commands.build_command(commands.POS, query=True)
