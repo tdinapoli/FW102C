@@ -11,7 +11,7 @@ import re
 import serial
 
 
-LOGGER = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def parse_float_value(msg: str):
@@ -51,22 +51,24 @@ class SerialClient:
         self._serial.timeout = timeout
 
     def write_command(self, command: str) -> None:
-        LOGGER.debug("Sending: %s", command)
+        logger.debug("Sending: %s", command)
         self._serial.write(command.encode("ascii") + self._line_ending)
         self._serial.flush()
 
     def query_command(self, command: str) -> str:
-        LOGGER.debug(f"Sending {command}")
+        logger.debug(f"Sending {command}")
+        print(f"Sending {command}")
+
         self.write_command(command)
         current_text = self.read_text_line()
         text = ""
         while current_text != "":
-            text += current_text.replace("\r", "\n")
+            text += current_text.split("\r")[1]
             current_text = self.read_text_line()
         return text
 
     def read_text_line(self) -> str:
         raw = self._serial.readline()
         text = raw.decode(errors="ignore").strip()
-        LOGGER.debug("Received text: %s", text)
+        logger.debug("Received text: %s", text)
         return text
