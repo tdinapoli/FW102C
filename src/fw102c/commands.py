@@ -19,7 +19,7 @@ class Commands(_StrEnum):
     SPEED = "speed"
     SENSORS = "sensors"
     SAVE = "save"
-    IDN = "idn"
+    IDN = "*idn"
 
 
 @dataclass
@@ -61,4 +61,4 @@ TRIG = Command(text="trig", writable=True, param_types=[int], subcommands=[])
 SPEED = Command(text="speed", writable=True, param_types=[int], subcommands=[])
 SENSORS = Command(text="sensors", writable=True, param_types=[int], subcommands=[])
 SAVE = Command(text="save", writable=False, param_types=[], subcommands=[])
-IDN = Command(text="idn", writable=False, param_types=[], subcommands=[])
+IDN = Command(text="*idn", writable=False, param_types=[], subcommands=[])
