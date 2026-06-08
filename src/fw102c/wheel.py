@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class Wheel:
+    IDN: str = "THORLABS FW102C/FW212C Filter Wheel version 1.07"
     MAX_POS: int = 12
     MIN_POS: int = 1
 
@@ -21,6 +22,10 @@ class Wheel:
         self._serial = SerialClient(
             port, baudrate=baudrate, timeout=timeout, line_ending=line_ending
         )
+        current_idn = self._serial.query_command(
+            commands.build_command(commands.IDN, query=True)
+        ).strip()
+        assert current_idn == self.IDN
 
     def goto_pos(self, pos: Literal[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]):
         assert self.MIN_POS <= pos <= self.MAX_POS, (
@@ -34,5 +39,5 @@ class Wheel:
         return int(
             self._serial.query_command(
                 commands.build_command(commands.POS, query=True)
-            ).split("\n")[1]
+            ).split("\r")[0]
         )
