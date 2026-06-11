@@ -57,7 +57,6 @@ class SerialClient:
 
     def query_command(self, command: str) -> str:
         logger.debug(f"Sending {command}")
-        print(f"Sending {command}")
 
         self.write_command(command)
         current_text = self.read_text_line()
